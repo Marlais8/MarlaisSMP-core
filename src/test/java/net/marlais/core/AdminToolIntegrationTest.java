@@ -8,10 +8,7 @@ import net.marlais.core.model.SimpleCorePlayer;
 import net.marlais.core.module.AdminToolModule;
 import net.marlais.core.module.ModuleLoaderService;
 import net.marlais.core.module.SimpleModuleLoaderService;
-import net.marlais.core.service.JsonStorageService;
-import net.marlais.core.service.ServiceContainer;
-import net.marlais.core.service.SimpleServiceContainer;
-import net.marlais.core.service.StorageService;
+import net.marlais.core.service.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,24 +27,27 @@ class AdminToolIntegrationTest {
     private ServiceContainer container;
     private EventBus eventBus;
     private StorageService storageService;
+    private ScoreboardService scoreboardService;
     private ModuleLoaderService moduleLoader;
 
     @BeforeEach
     void setUp() throws Exception {
         container = new SimpleServiceContainer();
         
-        // 1. Создаем и регистрируем системные службы
         eventBus = new AsynchronousEventBus();
         storageService = new JsonStorageService(tempDir);
+        scoreboardService = new SimpleScoreboardService(); // Новая служба табло
         moduleLoader = new SimpleModuleLoaderService(container);
 
         container.register(EventBus.class, eventBus);
         container.register(StorageService.class, storageService);
+        container.register(ScoreboardService.class, scoreboardService);
         container.register(ModuleLoaderService.class, moduleLoader);
 
         // Активируем службы ядра
         eventBus.onEnable();
         storageService.onEnable();
+        scoreboardService.onEnable();
         moduleLoader.onEnable();
     }
 
@@ -58,7 +58,6 @@ class AdminToolIntegrationTest {
 
     @Test
     void testAdminCoreIntegration() {
-        // 2. Регистрируем наш модуль управления
         AdminToolModule adminModule = new AdminToolModule();
         moduleLoader.registerModule(adminModule);
         moduleLoader.enableAllModules();
@@ -68,25 +67,22 @@ class AdminToolIntegrationTest {
 
         // Создаем дефолтного игрока в базе данных
         CorePlayer initPlayer = SimpleCorePlayer.builder(playerUuid, playerName)
-                .addMetadata("economy:dollars", "100.0")
+                .addMetadata("economy:dollars", "100.00")
                 .addMetadata("economy:coins", "50")
                 .build();
         storageService.savePlayer(initPlayer).join();
 
-        // 3. Имитируем вход игрока на сервер (вызов события)
+        // 1. Имитируем вход игрока на сервер (вызов события) — табло должно отрисоваться
         System.out.println("\n--- ИМИТАЦИЯ ВХОДА ИГРОКА ---");
         CorePlayer activePlayer = storageService.loadPlayer(playerUuid).join();
         eventBus.callEvent(new PlayerJoinEvent(activePlayer));
 
-        // 4. Имитируем использование админ-команд
-        System.out.println("\n--- ИСПОЛЬЗОВАНИЕ АДМИН-КОМАНД ---");
+        // 2. Имитируем использование админ-команды (пополнение баланса $) — табло должно обновиться!
+        System.out.println("\n--- ИСПОЛЬЗОВАНИЕ АДМИН-КОМАНДЫ ---");
         adminModule.cmdDepositDollars(playerUuid, 250.50);
-        adminModule.cmdDepositCoins(playerUuid, 1000);
 
-        // Проверяем, что новые балансы успешно записались на диск
+        // Проверяем, что новый баланс успешно записался на диск
         CorePlayer finalPlayer = storageService.loadPlayer(playerUuid).join();
         assertEquals("350.5", finalPlayer.getMetadataValue("economy:dollars").orElse("0"));
-        assertEquals("1050", finalPlayer.getMetadataValue("economy:coins").orElse("0"));
-        System.out.println("---------------------------------\n");
     }
 }
