@@ -1,0 +1,15 @@
+name: MarlaisCore
+version: '1.0.0'
+main: net.marlais.core.MarlaisCorePlugin
+api-version: '1.20'
+author: Fedir
+description: Core system for MarlaisSMP with Service Container and Module Loader.
+commands:
+  depositdollars:
+    description: Пополнить баланс игрока в долларах
+    permission: marlais.admin
+    usage: /depositdollars <игрок> <сумма>
+  depositcoins:
+    description: Пополнить баланс игрока в коинах
+    permission: marlais.admin
+    usage: /depositcoins <игрок> <сумма>

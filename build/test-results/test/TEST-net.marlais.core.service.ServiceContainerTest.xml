@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="net.marlais.core.service.ServiceContainerTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-07-14T12:27:55.439Z" hostname="DESKTOP-TST5NLJ" time="0.133">
+  <properties/>
+  <testcase name="testServiceNotFound()" classname="net.marlais.core.service.ServiceContainerTest" time="0.01"/>
+  <testcase name="testShutdownAll()" classname="net.marlais.core.service.ServiceContainerTest" time="0.026"/>
+  <testcase name="testConcurrentAccess()" classname="net.marlais.core.service.ServiceContainerTest" time="0.079"/>
+  <testcase name="testLifecycleExecution()" classname="net.marlais.core.service.ServiceContainerTest" time="0.001"/>
+  <testcase name="testRegisterAndGet()" classname="net.marlais.core.service.ServiceContainerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="net.marlais.core.model.CorePlayerTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-07-14T12:27:53.967Z" hostname="DESKTOP-TST5NLJ" time="0.274">
+  <properties/>
+  <testcase name="testImmutableMetadata()" classname="net.marlais.core.model.CorePlayerTest" time="0.162"/>
+  <testcase name="testPlayerCopyAndModify()" classname="net.marlais.core.model.CorePlayerTest" time="0.012"/>
+  <testcase name="testPlayerBuilderAndGetters()" classname="net.marlais.core.model.CorePlayerTest" time="0.055"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
